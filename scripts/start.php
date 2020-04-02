@@ -3,18 +3,7 @@
     require_once('../models/Question.php');
     require_once('../models/Answer.php');
 
-    session_start();
-
-    if(isset($_GET['username'])) {
-        $_SESSION['username'] = $_GET['username'];
-    }
-    else {
-        $_SESSION['username'] = $_GET['uknown_user'];
-    }
-    $_SESSION['score'] = 0;
-
     $questions = QuestionFactory::getQuestions();
-    
 ?>
 
 <!DOCTYPE html>
@@ -26,17 +15,18 @@
     <title>Document</title>
 </head>
 <body>
+    <h1>Correct answers <span id="correctCountDisplay">0</span> / 10</h1>
     <?php foreach($questions as $question){?>
 
         <div style="border:1px solid black">
             <h5><?=$question->getText()?></h5>
-            <input type="radio" data-correct="a" onclick="getAnswer(event)" name="<?php echo($question->getId()); ?>"> - <?=$question->getAnswer1()->getText()?>
-            <input type="radio" onclick="getAnswer(event)" name="<?php echo($question->getId()); ?>"> - <?=$question->getAnswer2()->getText()?>
+            <input type="radio" correct="<?php echo($question->getAnswer1()->getIsCorrect()); ?>" onclick="getAnswer(event)" name="<?php echo($question->getId()); ?>"> - <?=$question->getAnswer1()->getText()?>
+            <input type="radio" correct="<?php echo($question->getAnswer2()->getIsCorrect()); ?>" onclick="getAnswer(event)" name="<?php echo($question->getId()); ?>"> - <?=$question->getAnswer2()->getText()?>
         </div>
 
     <?php } ?>
 
-    <a href="">SUBMIT</a>
+    <button id="submit">Submit!</button>
 
     <script src="../js/main.js"></script>
 </body>
